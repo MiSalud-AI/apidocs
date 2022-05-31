@@ -1,0 +1,563 @@
+openapi: 3.0.0
+info:
+  title: 'MiSalud Api:'
+  version: 0.0.1-oas3
+# security:
+  # - Authorization: []
+  # - OAuth2: []
+paths:
+  /organizations/{organization_id}/users:
+    post:
+      security:
+        - Authorization: []
+      operationId: create-org-user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: "#/components/schemas/User"
+        description: Create user for a organization.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/User"
+        '400':
+          description: Bad request
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - users
+  /organizations/{organization_id}/users/{user_id} :
+    delete:
+      security:
+        - Authorization: []
+      operationId: cancel-user-subscription
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - users
+  /organizations/{organization_id}/users/{user_id}/phone-only :
+    patch:
+      security:
+        - Authorization: []
+      operationId: update-org-user-phone-only
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: "#/components/schemas/UserPhoneOnly"
+        description: Update phone number for user in organization.
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - users
+  /organizations/{organization_id}/users/{user_id}/resend-postregistration:
+    post:
+      security:
+        - Authorization: []
+      operationId: send-post-registration-sms
+      responses:
+        '200':
+          description: OK
+        '409':
+          description: Conflict  
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - users
+  /oauth2/v1/token:
+    post:
+      servers:
+      - url: https://auth.misalud.ai
+      parameters:
+        - in: query
+          name: grant_type
+          schema: 
+            type: string
+          example: client_credentials
+        - in: query
+          name: client_id
+          schema: 
+            type: string
+        - in: query
+          name: client_secret
+          schema: 
+            type: string
+      operationId: oauth0-token
+      responses:
+        '200':
+          description: OK
+        '409':
+          description: Conflict  
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+  # /mergeAccounts:
+  #   post:
+  #     operationId: account-MergeAccount
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             type: object
+  #             properties:
+  #               type:
+  #                 type: string
+  #               data:
+  #                 type: object
+  #                 properties:
+  #                   userId:
+  #                     type: string
+  #                     example: aaa-bbb-ccc
+  #                   mergeAccount:
+  #                     type: string
+  #                     example: auth0|abcdef1234
+  #       description: The user to create.
+  #     responses:
+  #       '200':
+  #         description: OK
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: object
+  #               required:
+  #                 - type
+  #               properties:
+  #                 loginType:
+  #                   type: string
+  #           application/text:
+  #             schema:
+  #               type: object
+  #               required:
+  #                 - type
+  #               properties:
+  #                 loginType:
+  #                   type: string
+  #       '400':
+  #         description: Bad request
+  #     security:
+  #       - Token: []
+  #       - Authorization: []
+  #     tags:
+  #       - Account
+  # /appointments-symptoms:
+  #   get:
+  #     operationId: config-GetAppSymptoms
+  #     responses:
+  #       '200':
+  #         description: ''
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "#/components/schemas/AppointmentsSymptoms"
+  #       '500':
+  #         description: 'Server Error'
+  #     security:
+  #       - Token: []
+  #       - Authorization: []
+  #     tags:
+  #       - Config
+  # /auth/{user_id}/verification-email0:
+  #   post:
+  #     operationId: auth0-ResendVerifyEmail
+  #     parameters:
+  #       - in: path
+  #         name: user_id
+  #         required: true
+  #         schema:
+  #           type: string
+  #     responses:
+  #       '200':
+  #         description: 'This is fine! 🔥'
+  #         content:
+  #           text/plain:
+  #             schema:
+  #               type: string
+  #               example: This is fine! 🔥
+  #     security:
+  #       - Token: []
+  #       - Authorization: []
+  #     tags:
+  #       - Auth0
+  #     description: Send Auth0 verification email for a given user
+  # /configs:
+  #   get:
+  #     operationId: config-Get
+  #     responses:
+  #       '200':
+  #         description: OK
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/Config'
+  #       '500':
+  #         description: 'Server Error'
+  #     security:
+  #       - Token: []
+  #       - Authorization: []
+  #     tags:
+  #       - Config
+  # /get-new-token:
+  #   post:
+  #     operationId: get-new-token
+  #     responses:
+  #       '200':
+  #         description: ''
+  #       '500':
+  #         description: ''
+  #     security:
+  #       - Aut0: []
+  #     tags:
+  #       - Auth
+  #     description: Returns a valid JWT that can be used for autenticated requests,  reciving an Auth0 valid JWT token
+  # /notifications:
+  #   post:
+  #     operationId: notification-Send
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/NotificationBody"
+  #     responses:
+  #       '200':
+  #         description: ''
+  #         content:
+  #           application/json:
+  #               schema:
+  #                 $ref: "#/components/schemas/RequestProcessed"
+  #       '500':
+  #         description: 'Server Error'
+  #     tags:
+  #       - Notifications
+  #     description: Sends a notification for a given event.
+  # /notifications/push/permissions:
+  #   post:
+  #     operationId: notification-Scheduler
+  #     responses:
+  #       '200':
+  #         description: ''
+  #       '500':
+  #         description: ''
+  #     tags:
+  #       - Notifications
+  # /reports/appointments:
+  #   get:
+  #     operationId: repoprt-GenerateAppointmentReport
+  #     responses:
+  #       '200':
+  #         description: ''
+  #         content:
+  #           application/json:
+  #               schema:
+  #                 $ref: "#/components/schemas/RequestProcessed"
+  #       '500':
+  #         description: ''
+  #     tags:
+  #       - Reports
+  # /reports/auth0:
+  #   get:
+  #     operationId: repoprt-GenerateAuth0Report
+  #     responses:
+  #       '200':
+  #         description: ''
+  #         content:
+  #           application/json:
+  #               schema:
+  #                 $ref: "#/components/schemas/RequestProcessed"
+  #       '500':
+  #         description: ''
+  #     tags:
+  #       - Reports
+  # /reports/logins:
+  #   get:
+  #     operationId: repoprt-GenerateLoginReport
+  #     responses:
+  #       '200':
+  #         description: ''
+  #         content:
+  #           application/json:
+  #               schema:
+  #                 $ref: "#/components/schemas/RequestProcessed"
+  #       '500':
+  #         description: ''
+  #     tags:
+  #       - Reports
+  # /reports/signups:
+  #   get:
+  #     operationId: repoprt-GenerateSignupReport
+  #     responses:
+  #       '200':
+  #         description: ''
+  #         content:
+  #           application/json:
+  #               schema:
+  #                 $ref: "#/components/schemas/RequestProcessed"
+  #       '500':
+  #         description: 'This is not fine🔥\nAnd the reason is'
+  #     tags:
+  #       - Reports
+  # /treat:
+  #   post:
+  #     operationId: treat-RecieveWebhook
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/EncounterProcessed"
+  #     responses:
+  #       '200':
+  #         description: ''
+  #         content:
+  #           application/json:
+  #               schema:
+  #                 $ref: "#/components/schemas/RequestProcessed"
+  #       '500':
+  #         description: 'This is not fine🔥\nAnd the reason is'
+  #     tags:
+  #       - Treat
+  # /treat/appointment/{appointment_id}:
+  #   post:
+  #     parameters:
+  #       - in: path
+  #         name: appointment_id
+  #         required: true
+  #         schema:
+  #           type: string
+  #     operationId: treat-ProcessAppointment
+  #     responses:
+  #       '201':
+  #         description: ''
+  #         content:
+  #           application/json:
+  #               schema:
+  #                 $ref: "#/components/schemas/TreatAppointmentResponse"
+            
+  #       '500':
+  #         description: 'This is not fine🔥\nAnd the reason is:'
+  #     tags:
+  #       - Treat
+  # /twilio/conversations:
+  #   post:
+  #     operationId: twilio-CreateConversation
+  #     responses:
+  #       '200':
+  #         description: ''
+  #       '500':
+  #         description: ''
+  #     security:
+  #       - Token: []
+  #       - Authorization: []
+  #     tags:
+  #       - Twilio
+  # /twilio/conversations/{conversation_id}:
+  #   delete:
+  #     parameters:
+  #       - in: path
+  #         name: conversation_id
+  #         required: true
+  #         schema:
+  #           type: string
+  #     operationId: twilio-DeleteConversations
+  #     responses:
+  #       '200':
+  #         description: ''
+  #       '500':
+  #         description: ''
+  #     security:
+  #       - Token: []
+  #       - Authorization: []
+  #     tags:
+  #       - Twilio
+  # /twilio/conversations/{conversation_id}/participants/{participant_id}:
+  #   delete:
+  #     parameters:
+  #       - in: path
+  #         name: conversation_id
+  #         required: true
+  #         schema:
+  #           type: string
+  #       - in: path
+  #         name: participant_id
+  #         required: true
+  #         schema:
+  #           type: string
+  #     operationId: twilio-DeleteConversationParticipant
+  #     responses:
+  #       '200':
+  #         description: ''
+  #       '500':
+  #         description: ''
+  #     security:
+  #       - Token: []
+  #       - Authorization: []
+  #     tags:
+  #       - Twilio
+  # /twilio/conversations/{sid}:
+  #   get:
+  #     parameters:
+  #       - in: path
+  #         name: sid
+  #         required: true
+  #         schema:
+  #           type: string
+  #     operationId: twilio-GetConversations
+  #     responses:
+  #       '200':
+  #         description: ''
+  #       '500':
+  #         description: ''
+  #     security:
+  #       - Token: []
+  #       - Authorization: []
+  #     tags:
+  #       - Twilio
+  # /twilio/participants:
+  #   post:
+  #     operationId: twilio-AddConversationParticipant
+  #     responses:
+  #       '200':
+  #         description: ''
+  #       '500':
+  #         description: ''
+  #     security:
+  #       - Token: []
+  #       - Authorization: []
+  #     tags:
+  #       - Twilio
+  # /twilio/token:
+  #   get:
+  #     operationId: twilio-GetVideoToken
+  #     responses:
+  #       '200':
+  #         description: ''
+  #       '500':
+  #         description: ''
+  #     security:
+  #       - Token: []
+  #       - Authorization: []
+  #     tags:
+  #       - Twilio
+  # /twilio/token-chat/{identity}:
+  #   get:
+  #     parameters:
+  #       - in: path
+  #         name: identity
+  #         required: true
+  #         schema:
+  #           type: string
+  #     operationId: twilio-GetChatToken
+  #     responses:
+  #       '200':
+  #         description: ''
+  #       '500':
+  #         description: ''
+  #     security:
+  #       - Token: []
+  #       - Authorization: []
+  #     tags:
+  #       - Twilio
+  # /twilio/token-speedtest:
+  #   get:
+  #     operationId: twilio-GetSpeedTestToken
+  #     responses:
+  #       '200':
+  #         description: ''
+  #       '500':
+  #         description: ''
+  #     security:
+  #       - Token: []
+  #       - Authorization: []
+  #     tags:
+  #       - Twilio
+servers:
+  - url: https://api.misalud.ai/api/v1
+
+components:
+  securitySchemes:
+    Authorization:
+      type: http
+      scheme: bearer 
+      bearerFormat: JWT
+    OAuth2:
+      type: oauth2
+      flows: 
+        authorizationCode:
+          authorizationUrl: http://localhost:8089/oauth2/v1/authorize
+          tokenUrl: http://localhost:8089/oauth2/v1/token              
+          # authorizationUrl: https://auth.misalud.ai/oauth2/v1/authorize
+          # tokenUrl: https://auth.misalud.ai/oauth2/v1/token              
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        familyName:
+          type: string
+        email:
+          type: string
+        address:
+          type: object
+          $ref: "#/components/schemas/Address"
+        phoneNumber:
+          type: string
+        countryCode:
+          type: string
+        sex:
+          type: string
+        birthday:
+          type: string
+        externalId:
+          type: string
+        familyPlanId:
+          type: string
+        planDuration:
+          type: string
+        nationality:
+          type: string
+        loanId:
+          type: string
+    Address: 
+      type: object
+      properties:
+        city: 
+          type: string
+        country: 
+          type: string
+        state: 
+          type: string
+        zipCode: 
+          type: string
+    UserPhoneOnly:
+      type: object
+      properties:
+        phoneNumber:
+          type: string
+        countryCode:
+          type: string
+    # AppointmentsSymptoms:
+    #   type: array
+    #   items: 
+    #       $ref: "#/components/schemas/AppointmentsSymptom"
