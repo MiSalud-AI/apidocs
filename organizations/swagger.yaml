@@ -1,16 +1,23 @@
-openapi: 3.0.0
+openapi: 3.0.3
 info:
-  title: 'MiSalud Api:'
-  version: 0.0.1-oas3
-# security:
-  # - Authorization: []
-  # - OAuth2: []
+  title: 'MiSalud Organizations Api:'
+  version: 0.0.1
+security:
+   - Authorization: []
+   - OAuth2: []
 paths:
   /organizations/{organization_id}/users:
     post:
       security:
         - Authorization: []
+        - OAuth2: []
       operationId: create-org-user
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -36,7 +43,19 @@ paths:
     delete:
       security:
         - Authorization: []
+        - OAuth2: []
       operationId: cancel-user-subscription
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: OK
@@ -50,7 +69,19 @@ paths:
     patch:
       security:
         - Authorization: []
+        - OAuth2: []
       operationId: update-org-user-phone-only
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -71,7 +102,19 @@ paths:
     post:
       security:
         - Authorization: []
+        - OAuth2: []
       operationId: send-post-registration-sms
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: OK
@@ -82,21 +125,25 @@ paths:
       tags:
         - users
   /oauth2/v1/token:
-    post:
-      servers:
-      - url: https://auth.misalud.ai
+    get:
+      servers: 
+        - url: https://server-auth-sandbox-5fl3be33eq-uc.a.run.app
+      security: []
       parameters:
         - in: query
           name: grant_type
+          required: true
           schema: 
             type: string
           example: client_credentials
         - in: query
           name: client_id
+          required: true
           schema: 
             type: string
         - in: query
           name: client_secret
+          required: true
           schema: 
             type: string
       operationId: oauth0-token
@@ -107,385 +154,10 @@ paths:
           description: Conflict  
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-  # /mergeAccounts:
-  #   post:
-  #     operationId: account-MergeAccount
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             type: object
-  #             properties:
-  #               type:
-  #                 type: string
-  #               data:
-  #                 type: object
-  #                 properties:
-  #                   userId:
-  #                     type: string
-  #                     example: aaa-bbb-ccc
-  #                   mergeAccount:
-  #                     type: string
-  #                     example: auth0|abcdef1234
-  #       description: The user to create.
-  #     responses:
-  #       '200':
-  #         description: OK
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               required:
-  #                 - type
-  #               properties:
-  #                 loginType:
-  #                   type: string
-  #           application/text:
-  #             schema:
-  #               type: object
-  #               required:
-  #                 - type
-  #               properties:
-  #                 loginType:
-  #                   type: string
-  #       '400':
-  #         description: Bad request
-  #     security:
-  #       - Token: []
-  #       - Authorization: []
-  #     tags:
-  #       - Account
-  # /appointments-symptoms:
-  #   get:
-  #     operationId: config-GetAppSymptoms
-  #     responses:
-  #       '200':
-  #         description: ''
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: "#/components/schemas/AppointmentsSymptoms"
-  #       '500':
-  #         description: 'Server Error'
-  #     security:
-  #       - Token: []
-  #       - Authorization: []
-  #     tags:
-  #       - Config
-  # /auth/{user_id}/verification-email0:
-  #   post:
-  #     operationId: auth0-ResendVerifyEmail
-  #     parameters:
-  #       - in: path
-  #         name: user_id
-  #         required: true
-  #         schema:
-  #           type: string
-  #     responses:
-  #       '200':
-  #         description: 'This is fine! 🔥'
-  #         content:
-  #           text/plain:
-  #             schema:
-  #               type: string
-  #               example: This is fine! 🔥
-  #     security:
-  #       - Token: []
-  #       - Authorization: []
-  #     tags:
-  #       - Auth0
-  #     description: Send Auth0 verification email for a given user
-  # /configs:
-  #   get:
-  #     operationId: config-Get
-  #     responses:
-  #       '200':
-  #         description: OK
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/Config'
-  #       '500':
-  #         description: 'Server Error'
-  #     security:
-  #       - Token: []
-  #       - Authorization: []
-  #     tags:
-  #       - Config
-  # /get-new-token:
-  #   post:
-  #     operationId: get-new-token
-  #     responses:
-  #       '200':
-  #         description: ''
-  #       '500':
-  #         description: ''
-  #     security:
-  #       - Aut0: []
-  #     tags:
-  #       - Auth
-  #     description: Returns a valid JWT that can be used for autenticated requests,  reciving an Auth0 valid JWT token
-  # /notifications:
-  #   post:
-  #     operationId: notification-Send
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: "#/components/schemas/NotificationBody"
-  #     responses:
-  #       '200':
-  #         description: ''
-  #         content:
-  #           application/json:
-  #               schema:
-  #                 $ref: "#/components/schemas/RequestProcessed"
-  #       '500':
-  #         description: 'Server Error'
-  #     tags:
-  #       - Notifications
-  #     description: Sends a notification for a given event.
-  # /notifications/push/permissions:
-  #   post:
-  #     operationId: notification-Scheduler
-  #     responses:
-  #       '200':
-  #         description: ''
-  #       '500':
-  #         description: ''
-  #     tags:
-  #       - Notifications
-  # /reports/appointments:
-  #   get:
-  #     operationId: repoprt-GenerateAppointmentReport
-  #     responses:
-  #       '200':
-  #         description: ''
-  #         content:
-  #           application/json:
-  #               schema:
-  #                 $ref: "#/components/schemas/RequestProcessed"
-  #       '500':
-  #         description: ''
-  #     tags:
-  #       - Reports
-  # /reports/auth0:
-  #   get:
-  #     operationId: repoprt-GenerateAuth0Report
-  #     responses:
-  #       '200':
-  #         description: ''
-  #         content:
-  #           application/json:
-  #               schema:
-  #                 $ref: "#/components/schemas/RequestProcessed"
-  #       '500':
-  #         description: ''
-  #     tags:
-  #       - Reports
-  # /reports/logins:
-  #   get:
-  #     operationId: repoprt-GenerateLoginReport
-  #     responses:
-  #       '200':
-  #         description: ''
-  #         content:
-  #           application/json:
-  #               schema:
-  #                 $ref: "#/components/schemas/RequestProcessed"
-  #       '500':
-  #         description: ''
-  #     tags:
-  #       - Reports
-  # /reports/signups:
-  #   get:
-  #     operationId: repoprt-GenerateSignupReport
-  #     responses:
-  #       '200':
-  #         description: ''
-  #         content:
-  #           application/json:
-  #               schema:
-  #                 $ref: "#/components/schemas/RequestProcessed"
-  #       '500':
-  #         description: 'This is not fine🔥\nAnd the reason is'
-  #     tags:
-  #       - Reports
-  # /treat:
-  #   post:
-  #     operationId: treat-RecieveWebhook
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: "#/components/schemas/EncounterProcessed"
-  #     responses:
-  #       '200':
-  #         description: ''
-  #         content:
-  #           application/json:
-  #               schema:
-  #                 $ref: "#/components/schemas/RequestProcessed"
-  #       '500':
-  #         description: 'This is not fine🔥\nAnd the reason is'
-  #     tags:
-  #       - Treat
-  # /treat/appointment/{appointment_id}:
-  #   post:
-  #     parameters:
-  #       - in: path
-  #         name: appointment_id
-  #         required: true
-  #         schema:
-  #           type: string
-  #     operationId: treat-ProcessAppointment
-  #     responses:
-  #       '201':
-  #         description: ''
-  #         content:
-  #           application/json:
-  #               schema:
-  #                 $ref: "#/components/schemas/TreatAppointmentResponse"
-            
-  #       '500':
-  #         description: 'This is not fine🔥\nAnd the reason is:'
-  #     tags:
-  #       - Treat
-  # /twilio/conversations:
-  #   post:
-  #     operationId: twilio-CreateConversation
-  #     responses:
-  #       '200':
-  #         description: ''
-  #       '500':
-  #         description: ''
-  #     security:
-  #       - Token: []
-  #       - Authorization: []
-  #     tags:
-  #       - Twilio
-  # /twilio/conversations/{conversation_id}:
-  #   delete:
-  #     parameters:
-  #       - in: path
-  #         name: conversation_id
-  #         required: true
-  #         schema:
-  #           type: string
-  #     operationId: twilio-DeleteConversations
-  #     responses:
-  #       '200':
-  #         description: ''
-  #       '500':
-  #         description: ''
-  #     security:
-  #       - Token: []
-  #       - Authorization: []
-  #     tags:
-  #       - Twilio
-  # /twilio/conversations/{conversation_id}/participants/{participant_id}:
-  #   delete:
-  #     parameters:
-  #       - in: path
-  #         name: conversation_id
-  #         required: true
-  #         schema:
-  #           type: string
-  #       - in: path
-  #         name: participant_id
-  #         required: true
-  #         schema:
-  #           type: string
-  #     operationId: twilio-DeleteConversationParticipant
-  #     responses:
-  #       '200':
-  #         description: ''
-  #       '500':
-  #         description: ''
-  #     security:
-  #       - Token: []
-  #       - Authorization: []
-  #     tags:
-  #       - Twilio
-  # /twilio/conversations/{sid}:
-  #   get:
-  #     parameters:
-  #       - in: path
-  #         name: sid
-  #         required: true
-  #         schema:
-  #           type: string
-  #     operationId: twilio-GetConversations
-  #     responses:
-  #       '200':
-  #         description: ''
-  #       '500':
-  #         description: ''
-  #     security:
-  #       - Token: []
-  #       - Authorization: []
-  #     tags:
-  #       - Twilio
-  # /twilio/participants:
-  #   post:
-  #     operationId: twilio-AddConversationParticipant
-  #     responses:
-  #       '200':
-  #         description: ''
-  #       '500':
-  #         description: ''
-  #     security:
-  #       - Token: []
-  #       - Authorization: []
-  #     tags:
-  #       - Twilio
-  # /twilio/token:
-  #   get:
-  #     operationId: twilio-GetVideoToken
-  #     responses:
-  #       '200':
-  #         description: ''
-  #       '500':
-  #         description: ''
-  #     security:
-  #       - Token: []
-  #       - Authorization: []
-  #     tags:
-  #       - Twilio
-  # /twilio/token-chat/{identity}:
-  #   get:
-  #     parameters:
-  #       - in: path
-  #         name: identity
-  #         required: true
-  #         schema:
-  #           type: string
-  #     operationId: twilio-GetChatToken
-  #     responses:
-  #       '200':
-  #         description: ''
-  #       '500':
-  #         description: ''
-  #     security:
-  #       - Token: []
-  #       - Authorization: []
-  #     tags:
-  #       - Twilio
-  # /twilio/token-speedtest:
-  #   get:
-  #     operationId: twilio-GetSpeedTestToken
-  #     responses:
-  #       '200':
-  #         description: ''
-  #       '500':
-  #         description: ''
-  #     security:
-  #       - Token: []
-  #       - Authorization: []
-  #     tags:
-  #       - Twilio
+
 servers:
   - url: https://api.misalud.ai/api/v1
+  - url: https://server-go-sandbox-5fl3be33eq-uc.a.run.app/api/v1
 
 components:
   securitySchemes:
@@ -495,12 +167,10 @@ components:
       bearerFormat: JWT
     OAuth2:
       type: oauth2
-      flows: 
-        authorizationCode:
-          authorizationUrl: http://localhost:8089/oauth2/v1/authorize
-          tokenUrl: http://localhost:8089/oauth2/v1/token              
-          # authorizationUrl: https://auth.misalud.ai/oauth2/v1/authorize
-          # tokenUrl: https://auth.misalud.ai/oauth2/v1/token              
+      flows:
+        clientCredentials:
+          scopes: {}
+          tokenUrl: https://server-auth-sandbox-5fl3be33eq-uc.a.run.app/oauth2/v1/token                           
   responses:
     UnauthorizedError:
       description: Access token is missing or invalid
@@ -557,7 +227,3 @@ components:
           type: string
         countryCode:
           type: string
-    # AppointmentsSymptoms:
-    #   type: array
-    #   items: 
-    #       $ref: "#/components/schemas/AppointmentsSymptom"
