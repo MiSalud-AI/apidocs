@@ -127,7 +127,7 @@ paths:
   /oauth2/v1/token:
     get:
       servers: 
-        - url: https://server-auth-sandbox-5fl3be33eq-uc.a.run.app
+        - url: https://auth.sandbox.misalud.ai
       security: []
       parameters:
         - in: query
@@ -156,8 +156,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
 
 servers:
-  - url: https://api.misalud.ai/api/v1
-  - url: https://server-go-sandbox-5fl3be33eq-uc.a.run.app/api/v1
+  - url: https://api.sandbox.misalud.ai/api/v1
 
 components:
   securitySchemes:
@@ -170,7 +169,7 @@ components:
       flows:
         clientCredentials:
           scopes: {}
-          tokenUrl: https://server-auth-sandbox-5fl3be33eq-uc.a.run.app/oauth2/v1/token                           
+          tokenUrl: https://auth.sandbox.misalud.ai//oauth2/v1/token                           
   responses:
     UnauthorizedError:
       description: Access token is missing or invalid
