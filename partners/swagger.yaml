@@ -234,6 +234,10 @@ components:
           type: string
         loanId: 
           type: string
+        partnerFacilityPostalCode: 
+          type: string
+        partnerFacilityId: 
+          type: string
     UserPhoneOnly:
       type: object
       properties:
