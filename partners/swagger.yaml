@@ -192,22 +192,22 @@ components:
           $ref: "#/components/schemas/Address"
         phoneNumber:
           type: string
+          description: phone number without country code
         countryCode:
           type: string
+          description: country code alpha 2 code (2 digits)
+          example: US
         sex:
           type: string
-        birthday:
+        birthdate:
           type: string
         externalId:
           type: string
-        familyPlanId:
+        familyPlanId: 
           type: string
-        planDuration:
-          type: string
-        nationality:
-          type: string
-        loanId:
-          type: string
+        metadata:
+          type: object
+          $ref: "#/components/schemas/Metadata"
     Address: 
       type: object
       properties:
@@ -215,14 +215,32 @@ components:
           type: string
         country: 
           type: string
+          description: country code alpha 2 code (2 digits)
+          example: US
         state: 
           type: string
+          description: state name
+          example: California
         zipCode: 
+          type: string
+    Metadata: 
+      type: object
+      properties:
+        familyName: 
+          type: string
+        planDuration: 
+          type: string
+        nationality: 
+          type: string
+        loanId: 
           type: string
     UserPhoneOnly:
       type: object
       properties:
         phoneNumber:
           type: string
+          description: phone number without country code
         countryCode:
           type: string
+          description: country code alpha 2 code (2 digits)
+          example: US
